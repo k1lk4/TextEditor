@@ -21,39 +21,25 @@ namespace TextEditor
     /// </summary>
     public partial class MainWindow : Window
     {
+        private string FilePath { get; set; } = @"C:\TextEditor\";
+        private string FileName { get; set; } = "text.txt";
+
         public MainWindow()
         {
             InitializeComponent();
+            TextFile.ReadFile(FilePath, ref Text);
         }
-
         private void SubmitText_Click(object sender, RoutedEventArgs e)
         {
-            string filePath = @"C:\TextEditor\";
-            string fileName = "text.txt";
-
-            DirectoryInfo filesDirectoryInfo = new(filePath);
-
-            if (!filesDirectoryInfo.Exists)
-            {
-                filesDirectoryInfo.Create();
-            }
-
-            FileStream writeFile = File.OpenWrite(filePath + fileName);
-            byte[] userEditorTextBytes = Encoding.Default.GetBytes(Text.Text);
-
-            writeFile.Write(userEditorTextBytes, 0, userEditorTextBytes.Length);
-
-            writeFile.Dispose();
-
-            FileStream readFile = File.OpenRead(filePath + fileName);
-
-            byte[] userFileTextBytes = new byte[readFile.Length];
-
-            readFile.Read(userFileTextBytes, 0, userFileTextBytes.Length);
-
-            string textFromFile = Encoding.Default.GetString(userFileTextBytes);
-
-            Text.Text = textFromFile;
+            TextFile.WriteFile(FilePath, ref Text);
+            TextFile.ReadFile(FilePath, ref Text);
         }
+
+        /*
+        private void DeleteFile_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+        */
     }
 }
